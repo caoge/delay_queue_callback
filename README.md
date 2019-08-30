@@ -28,7 +28,24 @@
 `参数 -c 指定配置文件的路径` 
 
 ##使用
-调用添加任务接口添加任务，时间到达exec_time后
+调用添加任务接口添加任务，时间到达执行时间后，向客户端发起http请求，携带信息，客户端需返回 ok 表示通知成功  否则会一直请求直到最大重试次数
+
+```json
+{
+  "topic": "inform",
+  "id": "08019413123",
+  "delay": 1567135500,
+  "callback":"https://www.baidu.com",
+  "body": {"example": true}
+}
+```
+|  参数名 |     类型    |     含义     |        备注       |
+|:-------:|:-----------:|:------------:|:-----------------:|
+|   topic  | string     |      当前任务类型                 |                     |
+|   id     | string     |    当前任务唯一标识                   |                   |
+|   delay  | int        |    延迟时间 单位:秒   到时间后，回调callback参数提供的URL地址  |                   |
+|   callback  | string        |    回调URL  |                   |
+|   body   | string     |    任务的额外内容 |             
 
 ## HTTP接口
 
@@ -42,7 +59,7 @@ URL `/job`
 {
   "topic": "inform",
   "id": "08019413123",
-  "exec_time": 1567135500,
+  "delay": 1567135500,
   "callback":"https://www.baidu.com",
   "body": {"example": true}
 }
@@ -51,7 +68,7 @@ URL `/job`
 |:-------:|:-----------:|:------------:|:-----------------:|
 |   topic  | string     |      当前任务类型                 |                     |
 |   id     | string     |    当前任务唯一标识                   |                   |
-|   exec_time  | int        |    当前任务的执行时间戳 到时间后，回调callback参数提供的URL地址  |                   |
+|   delay  | int        |    延迟时间 单位:秒   到时间后，回调callback参数提供的URL地址  |                   |
 |   callback  | string        |    回调URL  |                   |
 |   body   | string     |    任务的额外内容 |                   |
 
@@ -87,7 +104,7 @@ URL `/job`
   "data": {
             "topic": "inform",
             "id": "08019413123",
-            "exec_time": 1567135500,
+            "delay": 1567135500,
             "body": {"example": true},
             "job_sign":"inform-08019413123"
           }
@@ -99,7 +116,7 @@ URL `/job`
 |:-------:|:-----------:|:------------:|:-----------------:|
 |   topic  | string     |      当前任务类型                 |                     |
 |   id     | string     |    当前任务唯一标识                   |                   |
-|   exec_time  | int        |    当前任务的执行时间戳   |                   |
+|   delay  | int        |    延迟时间 单位:秒    |                   |
 |   callback  | string        |    回调URL  |                   |
 |   body   | string     |    任务的额外内容 |                   |
 |   job_sign   | string     |    全局唯一标识  客户端可忽略 |                   |
