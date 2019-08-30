@@ -65,7 +65,7 @@ func add(response *http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	(*response).Write(createResponseBody(1, "", nil))
+	(*response).Write(createResponseBody(1, "添加新任务成功", nil))
 
 }
 
@@ -116,7 +116,7 @@ func del(response *http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	(*response).Write(createResponseBody(1, "删除job失败", nil))
+	(*response).Write(createResponseBody(1, "删除job成功", nil))
 
 }
 
