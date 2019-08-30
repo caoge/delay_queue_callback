@@ -11,7 +11,7 @@ import (
 
 var bucket <-chan *Bucket
 
-func Start() {
+func init() {
 	bucket = bucketGenerator()
 	initTimers()
 }
