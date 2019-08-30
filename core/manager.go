@@ -111,7 +111,6 @@ func NewWork(job Job) error {
 }
 
 func clear(bk *Bucket, jobSign string) {
-	log.Println("删除了")
 	RemoveJob(jobSign)
 	bk.DelItem(jobSign)
 }
