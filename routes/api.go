@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"time"
 )
 
 func Handle(response http.ResponseWriter, request *http.Request) {
@@ -42,7 +41,7 @@ func add(response *http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	if job.ExecTime < time.Now().Unix() {
+	if job.Delay <= 0 {
 		(*response).Write(createResponseBody(0, "执行时间不合法", nil))
 		return
 	}
@@ -77,13 +76,12 @@ func get(response *http.ResponseWriter, request *http.Request) {
 		return
 	}
 	jobId := request.Form.Get("id");
-
-	if strings.TrimSpace(jobId) == ""{
+	if strings.TrimSpace(jobId) == "" {
 		(*response).Write(createResponseBody(0, "jobID参数缺失", nil))
 		return
 	}
 	topic := request.Form.Get("topic");
-	if strings.TrimSpace(topic) == ""{
+	if strings.TrimSpace(topic) == "" {
 		(*response).Write(createResponseBody(0, "topic参数缺失", nil))
 		return
 	}
@@ -109,7 +107,15 @@ func del(response *http.ResponseWriter, request *http.Request) {
 	}
 
 	jobId := request.Form.Get("id");
+	if strings.TrimSpace(jobId) == ""{
+		(*response).Write(createResponseBody(0, "jobId不能为空", nil))
+		return
+	}
 	topic := request.Form.Get("topic");
+	if strings.TrimSpace(topic) == ""{
+		(*response).Write(createResponseBody(0, "topic参数不能为空", nil))
+		return
+	}
 	err = core.RemoveJob(core.JobSign(topic, jobId));
 	if err != nil {
 		(*response).Write(createResponseBody(0, "删除job失败", nil))

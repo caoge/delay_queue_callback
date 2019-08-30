@@ -27,7 +27,8 @@
 
 `参数 -c 指定配置文件的路径` 
 
-
+##使用
+调用添加任务接口添加任务，时间到达exec_time后
 
 ## HTTP接口
 
@@ -42,6 +43,7 @@ URL `/job`
   "topic": "inform",
   "id": "08019413123",
   "exec_time": 1567135500,
+  "callback":"https://www.baidu.com",
   "body": {"example": true}
 }
 ```
@@ -49,7 +51,7 @@ URL `/job`
 |:-------:|:-----------:|:------------:|:-----------------:|
 |   topic  | string     |      当前任务类型                 |                     |
 |   id     | string     |    当前任务唯一标识                   |                   |
-|   exec_time  | int        |    当前任务的执行时间戳   |                   |
+|   exec_time  | int        |    当前任务的执行时间戳 到时间后，回调callback参数提供的URL地址  |                   |
 |   callback  | string        |    回调URL  |                   |
 |   body   | string     |    任务的额外内容 |                   |
 

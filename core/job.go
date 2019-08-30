@@ -10,7 +10,7 @@ import (
 type Job struct {
 	Topic    string `json:"topic"`
 	Id       string `json:"id"`
-	ExecTime int64  `json:"exec_time"`
+	Delay int64  `json:"delay"`
 	Body     interface{} `json:"body"`
 	Callback string `json:"callback"`
 	JobSign  string `json:"job_sign"`

@@ -105,7 +105,7 @@ func NewWork(job Job) error {
 		return err
 	}
 
-	err = (<-bucket).AddItem(job.JobSign, job.ExecTime)
+	err = (<-bucket).AddItem(job.JobSign, job.Delay+time.Now().Unix())
 	return err
 
 }
