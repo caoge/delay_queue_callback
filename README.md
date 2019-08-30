@@ -1,6 +1,6 @@
 # delay-queue
 
-基于redis的有序队列实现的延迟队列, 参考[有赞延迟队列设计](http://tech.youzan.com/queuing_delay)实现，但是没有采用文中的短轮询方式依赖客户端拉取，而是采用服务端回调的方式对客户端进行通知，遵循restful协议实现HTTP接口交互
+基于redis的有序队列实现的延迟队列, 参考[有赞延迟队列设计](http://tech.youzan.com/queuing_delay)实现，但是没有采用文中的短轮询方式依赖客户端拉取，而是采用服务端回调的方式对客户端进行通知，遵循RESTFUL协议实现HTTP接口交互
 
 ## 应用场景
 * 商品定时上架
