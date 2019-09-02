@@ -1,7 +1,6 @@
 package core
 
 import (
-	"bytes"
 	"delay_queue_callback/config"
 	"encoding/json"
 	"fmt"
@@ -91,7 +90,8 @@ func scanHandle(bk *Bucket) {
 				log.Println("json序列化失败", job)
 			}
 			clear(bk, bucketItem.JobSign)
-			go call(job.Callback, bytes.NewReader(jsonBody))
+			log.Println(string(jsonBody))
+			go call(job.Callback, jsonBody)
 		} else {
 			return
 		}

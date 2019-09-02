@@ -1,15 +1,15 @@
 package core
 
 import (
+	"bytes"
 	"delay_queue_callback/config"
-	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
 )
 
-func call(url string, body io.Reader) {
+func call(url string, body []byte) {
 
 	timeout := time.Duration(config.Conf.Timeout) * time.Second
 	client := &http.Client{
@@ -19,7 +19,7 @@ func call(url string, body io.Reader) {
 	var content []byte
 
 	for i := 0; i < config.Conf.MaxTries; i++ {
-		req, err := http.NewRequest(http.MethodPut, url, body)
+		req, err := http.NewRequest(http.MethodPut, url, bytes.NewReader(body))
 
 		defer req.Body.Close()
 		if err != nil {
@@ -27,6 +27,7 @@ func call(url string, body io.Reader) {
 			return
 		}
 
+		req.Header.Set("Content-Type","application/json")
 		res, err := client.Do(req)
 		if err != nil {
 			log.Printf("第%d次请求失败,失败原因为%v", i+1, err)
