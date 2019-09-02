@@ -1,3 +1,4 @@
 .idea/
 *.log
 dump.rdb
+cmd/cmd
