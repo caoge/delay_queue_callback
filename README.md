@@ -17,7 +17,7 @@
 ## 源码安装
 * `go`语言版本1.11+
 * `git clone https://github.com/ROOKIE20570/delay_queue_callback.git`
-* `cd /path/to/project/cmd`
+* `cd /path/to/cmd`
 * `go build cmd.go`
 
 
@@ -30,7 +30,7 @@
 ##使用
 调用添加任务接口添加任务，时间到达执行时间后，向客户端发起http请求，方法为PUT 携带信息，客户端需返回 ok 表示通知成功  否则会一直请求直到最大重试次数
 
-####携带信息
+###携带信息
 
 ```json
 {
