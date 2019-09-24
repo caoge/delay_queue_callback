@@ -89,9 +89,13 @@ func scanHandle(bk *Bucket) {
 			if err != nil {
 				log.Println("json序列化失败", job)
 			}
-			clear(bk, bucketItem.JobSign)
+
 			log.Println(string(jsonBody))
-			go call(job.Callback, jsonBody)
+
+			callSign := make(chan bool)
+			go call(job.Callback, jsonBody, callSign)
+
+			go afterHandle(bk, bucketItem, callSign)
 		} else {
 			return
 		}
@@ -99,6 +103,14 @@ func scanHandle(bk *Bucket) {
 
 }
 
+func afterHandle(bucket *Bucket, bucketItem *BucketItem, callSign <-chan bool) {
+	if ! (<-callSign) {
+		log.Println("回调失败",bucketItem.JobSign)
+	}
+
+	clear(bucket, bucketItem.JobSign)
+
+}
 func NewWork(job Job) error {
 	err := PushJob(job)
 	if err != nil {
