@@ -3,24 +3,23 @@ package core
 import (
 	"bytes"
 	"delay_queue_callback/config"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
 )
 
-func call(url string, body []byte, callSign chan<- bool) {
+func call(url string, body []byte) {
 
 	timeout := time.Duration(config.Conf.Timeout) * time.Second
 	client := &http.Client{
 		Timeout: timeout,
 	}
-
 	var content []byte
-
 	for i := 0; i < config.Conf.MaxTries; i++ {
 		req, err := http.NewRequest(http.MethodPut, url, bytes.NewReader(body))
-
+		fmt.Println(i,"次")
 		defer req.Body.Close()
 		if err != nil {
 			log.Println("构建请求失败%v", err)
@@ -37,12 +36,11 @@ func call(url string, body []byte, callSign chan<- bool) {
 
 		content, err = ioutil.ReadAll(res.Body)
 		if string(content) == "ok" {
-			callSign <- true
 			return
 		} else {
-			callSign <- false
 			log.Printf("第%d次请求失败,返回为%v", i+1, content)
 		}
+
 
 	}
 }

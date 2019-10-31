@@ -63,12 +63,12 @@ func scanHandle(bk *Bucket) {
 	for {
 		bucketItem, err := bk.GetItem()
 		if err != nil {
-			log.Println("获取bucket出错")
-			return
+				log.Println("获取bucket出错 请检查redis")
+			break
 		}
 
 		if bucketItem == nil {
-			return
+			break
 		}
 
 		if bucketItem.ExecTime <= time.Now().Unix() {
@@ -85,32 +85,26 @@ func scanHandle(bk *Bucket) {
 				continue
 			}
 
-			jsonBody, err := json.Marshal(job) //todo getJob unmarshal了这里marshal好像有点傻
+			jsonBody, err := json.Marshal(job)
 			if err != nil {
 				log.Println("json序列化失败", job)
 			}
 
 			log.Println(string(jsonBody))
 
-			callSign := make(chan bool)
-			go call(job.Callback, jsonBody, callSign)
+			clear(bk, bucketItem.JobSign)
+			go call(job.Callback, jsonBody)
 
-			go afterHandle(bk, bucketItem, callSign)
+
 		} else {
-			return
+			//如果bucket中还有job     那就不要再放回去了  直接等待到下次for循环执行
+			timeToExec := bucketItem.ExecTime - time.Now().Unix()
+
+			time.Sleep(time.Duration(timeToExec) * time.Second)
 		}
 	}
-
 }
 
-func afterHandle(bucket *Bucket, bucketItem *BucketItem, callSign <-chan bool) {
-	if ! (<-callSign) {
-		log.Println("回调失败",bucketItem.JobSign)
-	}
-
-	clear(bucket, bucketItem.JobSign)
-
-}
 func NewWork(job Job) error {
 	err := PushJob(job)
 	if err != nil {
